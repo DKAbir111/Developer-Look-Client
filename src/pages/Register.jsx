@@ -2,10 +2,12 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { sendEmailVerification } from "firebase/auth";
+import auth from "../firebase/firebase.init";
 
 export default function Register() {
 
-    const { createUser } = useContext(AuthContext)
+    const { createUser, logOut } = useContext(AuthContext)
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -14,7 +16,9 @@ export default function Register() {
         createUser(email, password)
             .then((res) => {
                 if (res?.user?.email) {
-                    toast.success('User registered successfully!')
+                    sendEmailVerification(auth.currentUser)
+                    toast.success('Email verification sent!')
+                    logOut()
                     form.reset();
                 }
             })
