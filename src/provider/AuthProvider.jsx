@@ -5,20 +5,27 @@ import { useEffect, useState } from "react";
 
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
-    //monitor user
+    const [loading, setLoading] = useState(true)
+
+    // state observer
     useEffect(() => {
-        const useSubscribe = onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser)
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            setLoading(false)
         })
-        return () => useSubscribe() //cleanup function
+        return () => unsubscribe();
     }, [])
+
+    console.log(user)
 
     //create new user
     const createUser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password);
     }
     const userInfo = {
-        createUser
+        createUser,
+        user,
+        loading
     }
     return (
         <AuthContext.Provider value={userInfo}>
