@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
 
-const TaskCard = ({ task, onUpdateStatus, onDelete }) => {
+const TaskCard = ({ task }) => {
     const statusBgColors = {
         Pending: "bg-yellow-100 border-yellow-400",
         "In Progress": "bg-blue-100 border-blue-400",
@@ -19,8 +19,12 @@ const TaskCard = ({ task, onUpdateStatus, onDelete }) => {
     const handleStatusChange = (e) => {
         const newStatus = e.target.value;
         setStatus(newStatus);
-        onUpdateStatus(task.id, newStatus);
+
     };
+
+    const onDelete = (id) => {
+        console.log(`Delete ${id}`);
+    }
 
     return (
         <div className={`card w-full max-w-md shadow-xl border relative ${statusBgColors[status]} transition`}>
