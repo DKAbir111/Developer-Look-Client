@@ -1,49 +1,60 @@
 const AddTask = () => {
-    return (
-        <div className="min-h-screen p-5 flex flex-col items-center gap-6">
-            {/* Add Task Form */}
-            <div className="max-w-md p-5 bg-white shadow-lg rounded-2xl border w-full">
-                <h2 className="text-lg font-bold text-gray-800 mb-3">Add New Task</h2>
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const title = form.title.value;
+        const description = form.description.value;
+        const dueDate = form.dueDate.value;
+        const status = form.status.value;
+        const priority = form.priority.value;
 
-                <form className="space-y-3">
+        console.log({ title, description, dueDate, status, priority });
+    };
+
+    return (
+        <div className="min-h-screen flex flex-col items-center p-5">
+            <div className="card w-full max-w-md bg-base-100 shadow-xl border p-5">
+                <h2 className="card-title text-lg font-semibold">Add New Task</h2>
+
+                <form className="space-y-4 mt-2" onSubmit={handleSubmit}>
                     {/* Title */}
                     <input
                         type="text"
+                        name="title"
                         placeholder="Task Title"
-                        className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300"
+                        className="input input-bordered w-full"
                     />
 
                     {/* Description */}
                     <textarea
                         placeholder="Task Description"
-                        className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300"
+                        className="textarea textarea-bordered w-full"
+                        name="description"
                     ></textarea>
 
                     {/* Due Date */}
                     <input
                         type="datetime-local"
-                        className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300"
+                        className="input input-bordered w-full"
+                        name="dueDate"
                     />
 
                     {/* Status */}
-                    <select className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300">
+                    <select name="status" className="select select-bordered w-full">
                         <option value="Pending">Pending</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Completed">Completed</option>
                     </select>
 
                     {/* Priority */}
-                    <select className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300">
+                    <select name="priority" className="select select-bordered w-full">
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
                     </select>
 
                     {/* Submit Button */}
-                    <button
-                        type="button"
-                        className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition"
-                    >
+                    <button type="submit" className="btn btn-primary w-full">
                         Add Task
                     </button>
                 </form>
