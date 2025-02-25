@@ -1,6 +1,6 @@
 const AddTask = () => {
     return (
-        <div className="min-h-screen bg-gray-100 p-5 flex flex-col items-center gap-6">
+        <div className="min-h-screen p-5 flex flex-col items-center gap-6">
             {/* Add Task Form */}
             <div className="max-w-md p-5 bg-white shadow-lg rounded-2xl border w-full">
                 <h2 className="text-lg font-bold text-gray-800 mb-3">Add New Task</h2>

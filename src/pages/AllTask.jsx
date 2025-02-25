@@ -19,7 +19,7 @@ export default function AllTask() {
 
             }
             {/* Add more task cards here */}
-            <Link className="max-w-md p-5 bg-base-200 shadow-lg rounded-2xl border flex justify-center items-center" to={'/add-task'}>
+            <Link className="card w-full max-w-md bg-base-100 shadow-xl border flex justify-center items-center" to={'/add-task'}>
 
                 <MdAdd className="text-7xl" />
 
