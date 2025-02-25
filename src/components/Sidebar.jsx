@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom"
-
+import { RiMenuFold2Line } from "react-icons/ri";
 export default function Sidebar() {
     return (
-        <div className="drawer lg:drawer-open">
+        <div className="drawer lg:drawer-open relative">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content flex flex-col items-center justify-center">
+            <div className="drawer-content flex flex-col items-center justify-cente absolute top-2 left-2">
                 {/* Page content here */}
                 <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
-                    Open drawer
+                    <RiMenuFold2Line />
                 </label>
             </div>
             <div className="drawer-side">
