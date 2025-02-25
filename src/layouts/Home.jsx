@@ -8,7 +8,9 @@ export default function Home() {
             <aside>
                 <Sidebar />
             </aside>
-            <Outlet />
+            <aside className="flex-1 container p-5">
+                <Outlet />
+            </aside>
         </main>
     )
 }
