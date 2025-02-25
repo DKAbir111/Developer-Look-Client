@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "title": "Complete project report",
+        "description": "Finish writing the final report for the client project.",
+        "dueDate": "2025-03-01T18:00:00Z",
+        "status": "Pending",
+        "priority": "High"
+    },
+    {
+        "id": 2,
+        "title": "Team meeting",
+        "description": "Weekly sync-up with the development team.",
+        "dueDate": "2025-02-26T10:30:00Z",
+        "status": "Pending",
+        "priority": "Medium"
+    },
+    {
+        "id": 3,
+        "title": "Fix authentication bug",
+        "description": "Resolve login issue affecting new users.",
+        "dueDate": "2025-02-28T23:59:59Z",
+        "status": "In Progress",
+        "priority": "High"
+    },
+    {
+        "id": 4,
+        "title": "Update project dependencies",
+        "description": "Upgrade all npm packages to the latest stable versions.",
+        "dueDate": "2025-03-03T12:00:00Z",
+        "status": "Pending",
+        "priority": "Low"
+    },
+    {
+        "id": 5,
+        "title": "Submit invoice for January",
+        "description": "Send the invoice to the finance department for payment processing.",
+        "dueDate": "2025-02-27T17:00:00Z",
+        "status": "Completed",
+        "priority": "Medium"
+    }
+]
