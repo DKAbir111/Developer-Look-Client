@@ -1,18 +1,21 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import TaskCard from "./TaskCard"
 
 export default function AllTask() {
-    const [tast, setTask] = useState([])
+    const [tasts, setTasks] = useState([])
     useEffect(() => {
         axios.get('/Todos.json')
             .then(res => {
-                setTask(res.data)
+                setTasks(res.data)
             })
     }, [])
-    console.log(tast)
+    console.log(tasts)
     return (
         <div>
-            All Task
+            {
+                tasts.map(task => <TaskCard key={task.id} task={task} />)
+            }
         </div>
     )
 }
