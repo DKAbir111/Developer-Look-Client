@@ -22,7 +22,7 @@ const AddTask = () => {
             .then(res => {
                 if (res.data?._id) {
                     toast.success('Task added successfully')
-                    addEvent(newTask)
+                    addEvent(res.data)
                     form.reset();
                 }
 

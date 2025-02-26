@@ -172,18 +172,32 @@ const useGoogleCalendar = () => {
             return;
         }
 
+        const eventId = taskMapping[_id]; // Get the actual event ID from mapping
+        if (!eventId) {
+            console.error(`No event found for task _id: ${_id}`);
+            return;
+        }
+
         try {
             await window.gapi.client.calendar.events.delete({
                 calendarId: "primary",
-                eventId: _id,
+                eventId: eventId, // Use the actual event ID
             });
 
             console.log("Event deleted successfully.");
+
+            setTaskMapping(prev => {
+                const updatedMapping = { ...prev };
+                delete updatedMapping[_id];
+                return updatedMapping;
+            });
+
             listUpcomingEvents();
         } catch (error) {
             console.error("Error deleting event:", error);
         }
     };
+
 
 
     return {

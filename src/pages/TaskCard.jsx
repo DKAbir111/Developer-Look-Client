@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import useGoogleCalendar from "../hooks/useGoogleCalender";
 const TaskCard = ({ task, refetch }) => {
+    const { updateEvent, deleteEvent } = useGoogleCalendar()
+
     const statusBgColors = {
         Pending: "bg-yellow-100 border-yellow-400",
         "In Progress": "bg-blue-100 border-blue-400",
@@ -39,6 +42,7 @@ const TaskCard = ({ task, refetch }) => {
                 if (res.status === 200) {
                     console.log(res)
                     toast.success('Task deleted successfully')
+                    deleteEvent(id)
                     refetch()
                 }
             }
