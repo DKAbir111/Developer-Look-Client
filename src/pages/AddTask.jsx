@@ -2,9 +2,11 @@ import axios from "axios";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { toast } from "react-toastify";
+import useGoogleCalendar from "../hooks/useGoogleCalender";
 
 const AddTask = () => {
     const { user } = useContext(AuthContext)
+    const { addEvent } = useGoogleCalendar()
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -20,6 +22,7 @@ const AddTask = () => {
             .then(res => {
                 if (res.data?._id) {
                     toast.success('Task added successfully')
+                    addEvent(newTask)
                     form.reset();
                 }
 
@@ -42,6 +45,7 @@ const AddTask = () => {
                         name="title"
                         placeholder="Task Title"
                         className="input input-bordered w-full"
+                        required
                     />
 
                     {/* Description */}
@@ -49,6 +53,7 @@ const AddTask = () => {
                         placeholder="Task Description"
                         className="textarea textarea-bordered w-full"
                         name="description"
+                        required
                     ></textarea>
 
                     {/* Due Date */}
@@ -56,17 +61,18 @@ const AddTask = () => {
                         type="datetime-local"
                         className="input input-bordered w-full"
                         name="dueDate"
+                        required
                     />
 
                     {/* Status */}
-                    <select name="status" className="select select-bordered w-full">
+                    <select required name="status" className="select select-bordered w-full">
                         <option value="Pending">Pending</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Completed">Completed</option>
                     </select>
 
                     {/* Priority */}
-                    <select name="priority" className="select select-bordered w-full">
+                    <select required name="priority" className="select select-bordered w-full">
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>

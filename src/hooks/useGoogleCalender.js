@@ -4,10 +4,12 @@ const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const DISCOVERY_DOC = "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest";
 const SCOPES = "https://www.googleapis.com/auth/calendar.events";
-const GoogleCalendar = () => {
+
+const useGoogleCalendar = () => {
     const [gapiLoaded, setGapiLoaded] = useState(false);
     const [gisLoaded, setGisLoaded] = useState(false);
     const [tokenClient, setTokenClient] = useState(null);
+    const [events, setEvents] = useState([]);
 
     useEffect(() => {
         const loadGapi = () => {
@@ -17,6 +19,15 @@ const GoogleCalendar = () => {
                     discoveryDocs: [DISCOVERY_DOC],
                 });
                 setGapiLoaded(true);
+
+                // Check if user is already authenticated on page load
+                const storedToken = localStorage.getItem("auth_token");
+                if (storedToken) {
+                    const token = JSON.parse(storedToken);
+                    // Set the token after client is initialized
+                    window.gapi.client.setToken(token);
+                    listUpcomingEvents();
+                }
             });
         };
 
@@ -29,6 +40,7 @@ const GoogleCalendar = () => {
                         console.error("Authorization error:", response);
                     } else {
                         console.log("Authorized successfully!");
+                        localStorage.setItem("auth_token", JSON.stringify(response));
                         listUpcomingEvents();
                     }
                 },
@@ -37,11 +49,9 @@ const GoogleCalendar = () => {
             setGisLoaded(true);
         };
 
-        // Ensure the scripts are loaded before running these functions
         if (window.gapi) loadGapi();
         if (window.google) loadGis();
-
-    }, []);
+    }, []); // Empty dependency array ensures this only runs once on mount
 
     const handleAuthClick = () => {
         if (!tokenClient) return;
@@ -58,20 +68,51 @@ const GoogleCalendar = () => {
                 maxResults: 10,
                 orderBy: "startTime",
             });
-            console.log("Upcoming Events:", response.result.items);
+            setEvents(response.result.items);
         } catch (error) {
             console.error("Error fetching events:", error);
         }
     };
 
-    return (
-        <div>
-            <h2>Google Calendar Integration</h2>
-            <button onClick={handleAuthClick} disabled={!gapiLoaded || !gisLoaded}>
-                Authorize with Google
-            </button>
-        </div>
-    );
+    const addEvent = async (task) => {
+        if (!gapiLoaded || !window.gapi.client.getToken()) {
+            console.error("Google API not loaded or user not authenticated.");
+            return;
+        }
+
+        try {
+            const event = {
+                summary: task.title,
+                description: task.description || "Task from To-Do App",
+                start: {
+                    dateTime: new Date(task.dueDate).toISOString(),
+                    timeZone: "Asia/Dhaka", // Change to your relevant time zone
+                },
+                end: {
+                    dateTime: new Date(new Date(task.dueDate).getTime() + 60 * 60 * 1000).toISOString(),
+                    timeZone: "Asia/Dhaka",
+                },
+            };
+
+            const response = await window.gapi.client.calendar.events.insert({
+                calendarId: "primary",
+                resource: event,
+            });
+
+            console.log("Event created:", response.result);
+            listUpcomingEvents(); // Refresh event list
+        } catch (error) {
+            console.error("Error adding event:", error);
+        }
+    };
+
+    return {
+        handleAuthClick,
+        gapiLoaded,
+        gisLoaded,
+        events,
+        addEvent,
+    };
 };
 
-export default GoogleCalendar;
+export default useGoogleCalendar;

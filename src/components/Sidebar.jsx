@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom"
 import { RiMenuFold2Line } from "react-icons/ri";
+import useGoogleCalendar from "../hooks/useGoogleCalender";
 export default function Sidebar() {
+    const { handleAuthClick, gapiLoaded, gisLoaded, events } = useGoogleCalendar();
+    console.log(events)
     return (
         <div className="drawer lg:drawer-open relative min-h-screen">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -22,7 +25,7 @@ export default function Sidebar() {
                     <div className="dropdown dropdown-top">
                         <div tabIndex={0} role="button" className="btn m-1"> Settings</div>
                         <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                            <li><a>Connect Google</a></li>
+                            <li><a onClick={handleAuthClick} disabled={!gapiLoaded || !gisLoaded}>Connect Google</a></li>
                             <li><a>Log Out</a></li>
                         </ul>
                     </div>
