@@ -23,7 +23,7 @@ const TaskCard = ({ task }) => {
     };
 
     const onDelete = (id) => {
-        console.log(`Delete ${id}`);
+        console.log(id)
     }
 
     return (
