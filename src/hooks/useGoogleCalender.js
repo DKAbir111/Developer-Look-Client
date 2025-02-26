@@ -139,17 +139,26 @@ const useGoogleCalendar = () => {
         }
 
         try {
+            // Fetch the existing event details
+            const existingEvent = await window.gapi.client.calendar.events.get({
+                calendarId: "primary",
+                eventId: eventId,
+            });
+
+            if (!existingEvent.result) {
+                console.error("Event not found.");
+                return;
+            }
+
+            // Only update the status in the description
+            const updatedDescription = existingEvent.result.description.replace(
+                /Status: .*/,
+                `Status: ${task.status}`
+            );
+
             const updatedEvent = {
-                summary: task.title,
-                description: `Description: ${task.description}\nStatus: ${task.status}\nPriority: ${task.priority}`,
-                start: {
-                    dateTime: new Date(task.dueDate).toISOString(),
-                    timeZone: "Asia/Dhaka",
-                },
-                end: {
-                    dateTime: new Date(new Date(task.dueDate).getTime() + 60 * 60 * 1000).toISOString(),
-                    timeZone: "Asia/Dhaka",
-                },
+                ...existingEvent.result,
+                description: updatedDescription,
             };
 
             const response = await window.gapi.client.calendar.events.update({
@@ -164,6 +173,7 @@ const useGoogleCalendar = () => {
             console.error("Error updating event:", error);
         }
     };
+
 
     // Delete Event using _id
     const deleteEvent = async (_id) => {

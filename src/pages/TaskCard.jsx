@@ -26,15 +26,19 @@ const TaskCard = ({ task, refetch }) => {
             .then(res => {
                 if (res.status === 200) {
                     setStatus(newStatus);
-                    refetch()
-                    toast.success('Task status updated successfully')
+                    console.log({ ...task, status: newStatus })
+                    updateEvent({ ...task, status: newStatus });
+                    refetch();
+                    toast.success('Task status updated successfully');
+
                 }
             })
             .catch(err => {
-                toast.error('Failed to update task status')
-                console.error(err)
-            })
+                toast.error('Failed to update task status');
+                console.error(err);
+            });
     };
+
 
     const onDelete = (id) => {
         axios.delete(`http://localhost:5001/api/todos/${id}`)
