@@ -4,20 +4,26 @@ import AuthContext from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
 import auth from "../firebase/firebase.init";
+import axios from "axios";
 
 export default function Register() {
 
     const { createUser, logOut } = useContext(AuthContext)
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
+
         createUser(email, password)
             .then((res) => {
                 if (res?.user?.email) {
                     sendEmailVerification(auth.currentUser)
                     toast.success('Email verification sent!')
+                    axios.post('http://localhost:5001/api/users', { email })
+                        .then(res => {
+                            console.log(res.data)
+                        })
                     logOut()
                     form.reset();
                 }

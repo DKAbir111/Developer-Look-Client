@@ -1,4 +1,10 @@
+import axios from "axios";
+import { useContext } from "react";
+import AuthContext from "../context/AuthContext";
+import { toast } from "react-toastify";
+
 const AddTask = () => {
+    const { user } = useContext(AuthContext)
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -8,7 +14,20 @@ const AddTask = () => {
         const status = form.status.value;
         const priority = form.priority.value;
 
-        console.log({ title, description, dueDate, status, priority });
+        const newTask = { title, description, dueDate, status, priority, email: user?.email }
+        console.log(newTask)
+        axios.post('http://localhost:5001/api/todos', newTask)
+            .then(res => {
+                if (res.data?._id) {
+                    toast.success('Task added successfully')
+                    form.reset();
+                }
+
+            })
+            .catch((error) => {
+                toast.error(error.message)
+                console.log(error);
+            });
     };
 
     return (

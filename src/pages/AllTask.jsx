@@ -1,16 +1,18 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import TaskCard from "./TaskCard"
 import { MdAdd } from "react-icons/md";
 import { Link } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 export default function AllTask() {
+    const { user } = useContext(AuthContext)
     const [tasts, setTasks] = useState([])
     useEffect(() => {
-        axios.get('/Todos.json')
+        axios.get(`http://localhost:5001/api/todos?email=${user?.email}`)
             .then(res => {
                 setTasks(res.data)
             })
-    }, [])
+    }, [user?.email])
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {
