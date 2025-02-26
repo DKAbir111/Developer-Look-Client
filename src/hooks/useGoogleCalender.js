@@ -9,7 +9,8 @@ const useGoogleCalendar = () => {
     const [gapiLoaded, setGapiLoaded] = useState(false);
     const [gisLoaded, setGisLoaded] = useState(false);
     const [tokenClient, setTokenClient] = useState(null);
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState({});
+    const [taskMapping, setTaskMapping] = useState({});
 
     useEffect(() => {
         const loadGapi = () => {
@@ -20,11 +21,9 @@ const useGoogleCalendar = () => {
                 });
                 setGapiLoaded(true);
 
-                // Check if user is already authenticated on page load
                 const storedToken = localStorage.getItem("auth_token");
                 if (storedToken) {
                     const token = JSON.parse(storedToken);
-                    // Set the token after client is initialized
                     window.gapi.client.setToken(token);
                     listUpcomingEvents();
                 }
@@ -51,7 +50,7 @@ const useGoogleCalendar = () => {
 
         if (window.gapi) loadGapi();
         if (window.google) loadGis();
-    }, []); // Empty dependency array ensures this only runs once on mount
+    }, []);
 
     const handleAuthClick = () => {
         if (!tokenClient) return;
@@ -68,7 +67,19 @@ const useGoogleCalendar = () => {
                 maxResults: 10,
                 orderBy: "startTime",
             });
-            setEvents(response.result.items);
+            const eventsList = response.result.items;
+            const taskEventMap = {};
+
+            eventsList.forEach(event => {
+                const eventId = event.id;
+                const _id = event.extendedProperties?.private?.taskId;
+                if (_id) {
+                    taskEventMap[_id] = eventId;
+                }
+            });
+
+            setEvents(eventsList);
+            setTaskMapping(taskEventMap);
         } catch (error) {
             console.error("Error fetching events:", error);
         }
@@ -83,14 +94,19 @@ const useGoogleCalendar = () => {
         try {
             const event = {
                 summary: task.title,
-                description: task.description || "Task from To-Do App",
+                description: `Description: ${task.description}\nStatus: ${task.status}\nPriority: ${task.priority}`,
                 start: {
                     dateTime: new Date(task.dueDate).toISOString(),
-                    timeZone: "Asia/Dhaka", // Change to your relevant time zone
+                    timeZone: "Asia/Dhaka",
                 },
                 end: {
                     dateTime: new Date(new Date(task.dueDate).getTime() + 60 * 60 * 1000).toISOString(),
                     timeZone: "Asia/Dhaka",
+                },
+                extendedProperties: {
+                    private: {
+                        taskId: task._id,
+                    },
                 },
             };
 
@@ -100,11 +116,75 @@ const useGoogleCalendar = () => {
             });
 
             console.log("Event created:", response.result);
-            listUpcomingEvents(); // Refresh event list
+
+            setTaskMapping(prev => ({ ...prev, [task._id]: response.result.id }));
+
+            listUpcomingEvents();
+            return response.result.id;
         } catch (error) {
             console.error("Error adding event:", error);
         }
     };
+
+    const updateEvent = async (task) => {
+        const eventId = taskMapping[task._id];
+        if (!eventId) {
+            console.error(`No event found for task _id: ${task._id}`);
+            return;
+        }
+
+        if (!gapiLoaded || !window.gapi.client.getToken()) {
+            console.error("Google API not loaded or user not authenticated.");
+            return;
+        }
+
+        try {
+            const updatedEvent = {
+                summary: task.title,
+                description: `Description: ${task.description}\nStatus: ${task.status}\nPriority: ${task.priority}`,
+                start: {
+                    dateTime: new Date(task.dueDate).toISOString(),
+                    timeZone: "Asia/Dhaka",
+                },
+                end: {
+                    dateTime: new Date(new Date(task.dueDate).getTime() + 60 * 60 * 1000).toISOString(),
+                    timeZone: "Asia/Dhaka",
+                },
+            };
+
+            const response = await window.gapi.client.calendar.events.update({
+                calendarId: "primary",
+                eventId: eventId,
+                resource: updatedEvent,
+            });
+
+            console.log("Event updated:", response.result);
+            listUpcomingEvents();
+        } catch (error) {
+            console.error("Error updating event:", error);
+        }
+    };
+
+    // Delete Event using _id
+    const deleteEvent = async (_id) => {
+        if (!gapiLoaded || !window.gapi.client.getToken()) {
+            console.error("Google API not loaded or user not authenticated.");
+            return;
+        }
+
+        try {
+            await window.gapi.client.calendar.events.delete({
+                calendarId: "primary",
+                eventId: _id,
+            });
+
+            console.log("Event deleted successfully.");
+            listUpcomingEvents();
+        } catch (error) {
+            console.error("Error deleting event:", error);
+        }
+    };
+
 
     return {
         handleAuthClick,
@@ -112,6 +192,8 @@ const useGoogleCalendar = () => {
         gisLoaded,
         events,
         addEvent,
+        updateEvent,
+        deleteEvent,
     };
 };
 
