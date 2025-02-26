@@ -2,9 +2,10 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { FaGoogle } from "react-icons/fa";
 
 export default function Login() {
-    const { signIn, logOut } = useContext(AuthContext)
+    const { signIn, logOut, signInWithGoogle, user } = useContext(AuthContext)
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -30,6 +31,16 @@ export default function Login() {
             });
     };
 
+    console.log(user)
+
+    const handleGoogleLogin = () => {
+        signInWithGoogle()
+            .then((res) => {
+                if (res?.user) {
+                    toast.success('User logged in successfully');
+                }
+            })
+    }
     return (
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl" onSubmit={handleSubmit}>
             <form className="card-body">
@@ -52,6 +63,7 @@ export default function Login() {
                     <button className="btn btn-primary">Login</button>
                 </div>
             </form>
+            <button className="btn mb-3" onClick={handleGoogleLogin}><FaGoogle /> Login with Google</button>
         </div>
     )
 }

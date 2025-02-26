@@ -35,7 +35,7 @@ export default function AllTask() {
                         <Skeleton height={20} width={80} className="mt-3" />
                     </div>
                 ))
-                : tasks.map(task => <TaskCard key={task.id} task={task} refetch={refetch} />)}
+                : tasks.map(task => <TaskCard key={task._id} task={task} refetch={refetch} />)}
 
             {/* Add Task Button */}
             <Link className="card w-full max-w-md bg-base-100 shadow-xl border flex justify-center items-center min-h-[274px]" to={'/add-task'}>
