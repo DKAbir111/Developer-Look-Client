@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
-
-const TaskCard = ({ task }) => {
+import axios from "axios";
+import { toast } from "react-toastify";
+const TaskCard = ({ task, refetch }) => {
     const statusBgColors = {
         Pending: "bg-yellow-100 border-yellow-400",
         "In Progress": "bg-blue-100 border-blue-400",
@@ -18,16 +19,38 @@ const TaskCard = ({ task }) => {
 
     const handleStatusChange = (e) => {
         const newStatus = e.target.value;
-        setStatus(newStatus);
-
+        axios.put(`http://localhost:5001/api/todos/${task._id}`, { status: newStatus })
+            .then(res => {
+                if (res.status === 200) {
+                    setStatus(newStatus);
+                    refetch()
+                    toast.success('Task status updated successfully')
+                }
+            })
+            .catch(err => {
+                toast.error('Failed to update task status')
+                console.error(err)
+            })
     };
 
     const onDelete = (id) => {
-        console.log(id)
+        axios.delete(`http://localhost:5001/api/todos/${id}`)
+            .then(res => {
+                if (res.status === 200) {
+                    console.log(res)
+                    toast.success('Task deleted successfully')
+                    refetch()
+                }
+            }
+            )
+            .catch(err => {
+                toast.error('Failed to delete task')
+                console.error(err)
+            })
     }
 
     return (
-        <div className={`card w-full max-w-md shadow-xl border relative ${statusBgColors[status]} transition`}>
+        <div className={`card w-full max-w-md shadow-xl border relative ${statusBgColors[status]} transition min-h-[274px]`}>
             <div className="card-body">
                 <h2 className="card-title text-lg font-semibold">{task?.title}</h2>
                 <p className="text-gray-700 text-sm">{task?.description}</p>
@@ -58,7 +81,7 @@ const TaskCard = ({ task }) => {
 
                 {/* Delete Button */}
                 <button
-                    onClick={() => onDelete(task.id)}
+                    onClick={() => onDelete(task._id)}
                     className="absolute top-3 right-3  flex items-center gap-1 hover:text-red-600 cursor-pointer"
                 >
                     <Trash2 size={16} />

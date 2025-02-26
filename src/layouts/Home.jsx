@@ -8,7 +8,7 @@ export default function Home() {
             <aside>
                 <Sidebar />
             </aside>
-            <aside className="flex-1 container p-5">
+            <aside className="flex-1 container p-5 max-h-screen overflow-scroll">
                 <Outlet />
             </aside>
         </main>
