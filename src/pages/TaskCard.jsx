@@ -4,9 +4,12 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useGoogleCalendar from "../hooks/useGoogleCalender";
 import AuthContext from "../context/AuthContext";
+import Swal from "sweetalert2";
+
 const TaskCard = ({ task, refetch }) => {
-    const { updateEvent, deleteEvent } = useGoogleCalendar()
-    const { user } = useContext(AuthContext)
+    const { updateEvent, deleteEvent } = useGoogleCalendar();
+    const { user } = useContext(AuthContext);
+
     const statusBgColors = {
         Pending: "bg-yellow-100 border-yellow-400",
         "In Progress": "bg-blue-100 border-blue-400",
@@ -27,39 +30,50 @@ const TaskCard = ({ task, refetch }) => {
             .then(res => {
                 if (res.status === 200) {
                     setStatus(newStatus);
-                    // console.log({ ...task, status: newStatus })
                     updateEvent({ ...task, status: newStatus });
                     refetch();
-                    toast.success('Task status updated successfully');
-
+                    toast.success("Task status updated successfully");
                 }
             })
             .catch(err => {
-                toast.error('Failed to update task status');
+                toast.error("Failed to update task status");
                 console.error(err);
             });
     };
 
-
-    const onDelete = (id) => {
-        axios.delete(`https://todo-server-tau-gilt.vercel.app/api/todos/${id}`, {
-            data: { email: user?.email },
-            withCredentials: true,
-        })
-            .then(res => {
-                if (res.status === 200) {
-                    // console.log(res);
-                    toast.success('Task deleted successfully');
-                    deleteEvent(id);
-                    refetch();
-                }
-            })
-            .catch(err => {
-                toast.error('Failed to delete task');
-                console.error(err);
-            });
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`https://todo-server-tau-gilt.vercel.app/api/todos/${id}`, {
+                    data: { email: user?.email },
+                    withCredentials: true,
+                })
+                    .then(res => {
+                        if (res.status === 200) {
+                            deleteEvent(id);
+                            refetch();
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your task has been deleted.",
+                                icon: "success"
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        toast.error("Failed to delete task");
+                        console.error(err);
+                    });
+            }
+        });
     };
-
 
     return (
         <div className={`card w-full max-w-md shadow-xl border relative ${statusBgColors[status]} transition min-h-[274px]`}>
@@ -93,8 +107,8 @@ const TaskCard = ({ task, refetch }) => {
 
                 {/* Delete Button */}
                 <button
-                    onClick={() => onDelete(task._id)}
-                    className="absolute top-3 right-3  flex items-center gap-1 hover:text-red-600 cursor-pointer"
+                    onClick={() => handleDelete(task._id)}
+                    className="absolute top-3 right-3 flex items-center gap-1 hover:text-red-600 cursor-pointer"
                 >
                     <Trash2 size={16} />
                 </button>
