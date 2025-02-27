@@ -25,7 +25,7 @@ export default function AllTask() {
     if (error) return <p className="text-red-500">Error fetching tasks: {error}</p>;
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-5">
             {isLoading || loading
                 ? [...Array(5)].map((_, index) => (
                     <div key={index} className="card w-full max-w-md shadow-xl border p-4 min-h-[274px] space-y-3">

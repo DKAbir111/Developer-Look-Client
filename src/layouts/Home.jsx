@@ -9,7 +9,7 @@ export default function Home() {
             <aside>
                 <Sidebar />
             </aside>
-            <aside className="flex-1 container p-5 max-h-screen overflow-scroll">
+            <aside className="flex-1 container  max-h-screen overflow-scroll bg-gradient-to-br from-cyan-100 to-blue-100">
                 <Outlet />
 
             </aside>
