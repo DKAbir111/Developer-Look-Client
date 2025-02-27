@@ -50,7 +50,7 @@ export default function Register() {
                     </label>
                     <input type="password" name="password" placeholder="password" className="input input-bordered" required />
                     <label className="label">
-                        <span >Already have an account?<Link to={'/login'} className="label-text-alt link link-hover"> Login</Link> </span>
+                        <span >Already have an account?<Link to={'/'} className="label-text-alt link link-hover"> Login</Link> </span>
                     </label>
                 </div>
                 <div className="form-control mt-6">

@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { FaGoogle } from "react-icons/fa";
+import useGoogleCalendar from "../hooks/useGoogleCalender";
 
 export default function Login() {
-    const { signIn, logOut, signInWithGoogle, user } = useContext(AuthContext)
+    const { signIn, logOut, signInWithGoogle, user } = useContext(AuthContext);
+    const { handleAuthClick, gapiLoaded, gisLoaded } = useGoogleCalendar();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -17,10 +20,10 @@ export default function Login() {
                 const user = res?.user;
                 if (user?.email) {
                     if (user.emailVerified) {
-                        toast.success('User logged in successfully!');
+                        toast.success("User logged in successfully!");
                         form.reset();
                     } else {
-                        toast.error('Please verify your email before logging in!');
+                        toast.error("Please verify your email before logging in!");
                         logOut();
                     }
                 }
@@ -31,19 +34,29 @@ export default function Login() {
             });
     };
 
-    console.log(user)
+    console.log(user);
 
     const handleGoogleLogin = () => {
         signInWithGoogle()
             .then((res) => {
                 if (res?.user) {
-                    toast.success('User logged in successfully');
+                    toast.success("User logged in successfully");
+                    if (gapiLoaded && gisLoaded) {
+                        handleAuthClick();
+                    } else {
+                        console.warn("Google API not loaded yet.");
+                    }
                 }
             })
-    }
+            .catch((error) => {
+                toast.error(error.message);
+                console.error("Google sign-in error:", error);
+            });
+    };
+
     return (
-        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl" onSubmit={handleSubmit}>
-            <form className="card-body">
+        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+            <form className="card-body" onSubmit={handleSubmit}>
                 <div className="form-control">
                     <label className="label">
                         <span className="label-text">Email</span>
@@ -56,14 +69,21 @@ export default function Login() {
                     </label>
                     <input type="password" name="password" placeholder="password" className="input input-bordered" required />
                     <label className="label">
-                        <span >Dont have an account? <Link to={'/register'} className="label-text-alt link link-hover"> Register</Link></span>
+                        <span>
+                            Don&apos;t have an account?{" "}
+                            <Link to={"/register"} className="label-text-alt link link-hover">
+                                Register
+                            </Link>
+                        </span>
                     </label>
                 </div>
                 <div className="form-control mt-6">
                     <button className="btn btn-primary">Login</button>
                 </div>
             </form>
-            <button className="btn mb-3" onClick={handleGoogleLogin}><FaGoogle /> Login with Google</button>
+            <button className="btn mb-3" onClick={handleGoogleLogin} disabled={!gapiLoaded || !gisLoaded}>
+                <FaGoogle /> Login with Google
+            </button>
         </div>
-    )
+    );
 }

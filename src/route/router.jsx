@@ -7,31 +7,38 @@ import AllTask from "../pages/AllTask";
 import AddTask from "../pages/AddTask";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import AuthLayout from "../layouts/AuthLayout";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <Home />,
+        path: '/',
+        element: <AuthLayout />,
         errorElement: <Error />,
         children: [
             {
-                path: "all-task",
-                element: <AllTask />,
-            },
-            {
-                path: "add-task",
-                element: <AddTask />,
-            },
-            {
-                path: "login",
+                path: '/',
                 element: <Login />,
             },
             {
-                path: "register",
+                path: '/register',
                 element: <Register />,
             }
-        ],
+        ]
     },
+    {
+        path: '/task',
+        element: <Home />,
+        children: [
+            {
+                path: '/task',
+                element: <AllTask />,
+            },
+            {
+                path: '/task/add',
+                element: <AddTask />,
+            }
+        ]
+    }
 ]);
 
 export default router;
