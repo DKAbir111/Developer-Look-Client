@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Trash2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useGoogleCalendar from "../hooks/useGoogleCalender";
+import AuthContext from "../context/AuthContext";
 const TaskCard = ({ task, refetch }) => {
     const { updateEvent, deleteEvent } = useGoogleCalendar()
-
+    const { user } = useContext(AuthContext)
     const statusBgColors = {
         Pending: "bg-yellow-100 border-yellow-400",
         "In Progress": "bg-blue-100 border-blue-400",
@@ -22,7 +23,7 @@ const TaskCard = ({ task, refetch }) => {
 
     const handleStatusChange = (e) => {
         const newStatus = e.target.value;
-        axios.put(`http://localhost:5001/api/todos/${task._id}`, { status: newStatus })
+        axios.put(`http://localhost:5001/api/todos/${task._id}`, { status: newStatus, email: user?.email }, { withCredentials: true })
             .then(res => {
                 if (res.status === 200) {
                     setStatus(newStatus);
@@ -41,21 +42,24 @@ const TaskCard = ({ task, refetch }) => {
 
 
     const onDelete = (id) => {
-        axios.delete(`http://localhost:5001/api/todos/${id}`)
+        axios.delete(`http://localhost:5001/api/todos/${id}`, {
+            data: { email: user?.email },
+            withCredentials: true,
+        })
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res)
-                    toast.success('Task deleted successfully')
-                    deleteEvent(id)
-                    refetch()
+                    console.log(res);
+                    toast.success('Task deleted successfully');
+                    deleteEvent(id);
+                    refetch();
                 }
-            }
-            )
-            .catch(err => {
-                toast.error('Failed to delete task')
-                console.error(err)
             })
-    }
+            .catch(err => {
+                toast.error('Failed to delete task');
+                console.error(err);
+            });
+    };
+
 
     return (
         <div className={`card w-full max-w-md shadow-xl border relative ${statusBgColors[status]} transition min-h-[274px]`}>

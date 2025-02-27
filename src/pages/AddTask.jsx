@@ -18,7 +18,9 @@ const AddTask = () => {
 
         const newTask = { title, description, dueDate, status, priority, email: user?.email }
         console.log(newTask)
-        axios.post('http://localhost:5001/api/todos', newTask)
+        axios.post('http://localhost:5001/api/todos', newTask, {
+            withCredentials: true
+        })
             .then(res => {
                 if (res.data?._id) {
                     toast.success('Task added successfully')

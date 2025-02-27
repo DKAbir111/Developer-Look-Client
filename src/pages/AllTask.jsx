@@ -14,7 +14,9 @@ export default function AllTask() {
     const { data: tasks = [], isLoading, error, refetch } = useQuery({
         queryKey: ['tasks', user?.email],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5001/api/todos?email=${user?.email}`);
+            const res = await axios.get(`http://localhost:5001/api/todos?email=${user?.email}`, {
+                withCredentials: true,
+            });
             return res.data;
         },
         enabled: !!user?.email,
@@ -37,7 +39,7 @@ export default function AllTask() {
                 : tasks.map(task => <TaskCard key={task._id} task={task} refetch={refetch} />)}
 
             {/* Add Task Button */}
-            <Link className="card w-full max-w-md bg-base-100 shadow-xl border flex justify-center items-center min-h-[274px]" to={'/add-task'}>
+            <Link className="card w-full max-w-md bg-base-100 shadow-xl border flex justify-center items-center min-h-[274px]" to={'/task/add'}>
                 <MdAdd className="text-7xl" />
             </Link>
         </div>
