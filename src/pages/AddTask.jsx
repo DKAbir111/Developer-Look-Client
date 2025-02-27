@@ -36,7 +36,7 @@ const AddTask = () => {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen justify-center">
+        <div className="flex flex-col items-center min-h-screen justify-center px-5">
             <div className="card w-full max-w-md bg-base-100 shadow-xl border p-5">
                 <h2 className="card-title text-lg font-semibold">Add New Task</h2>
 

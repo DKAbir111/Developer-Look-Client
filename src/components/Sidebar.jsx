@@ -14,12 +14,14 @@ export default function Sidebar() {
     const navigate = useNavigate();
 
     return (
-        <div className="drawer lg:drawer-open relative min-h-screen">
+        <div className="drawer lg:drawer-open relative min-h-screen z-20">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col items-center justify-center absolute top-2 left-2">
-                <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
+                <label htmlFor="my-drawer-2" className="btn bg-gradient-to-r from-cyan-500 to-blue-500 drawer-button lg:hidden">
                     <RiMenuFold2Line />
+
                 </label>
+
             </div>
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
@@ -27,7 +29,7 @@ export default function Sidebar() {
                     {/* Sidebar Header */}
                     <div>
                         <div className="flex items-center space-x-3 mb-6">
-                            <img src={logo} alt="logo" className="w-1/4" />
+                            <img src={logo} alt="logo" className="w-1/5" />
                             <h3 className="text-2xl font-semibold">Todo App</h3>
                         </div>
 
