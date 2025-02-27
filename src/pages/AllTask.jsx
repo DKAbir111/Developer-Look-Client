@@ -8,10 +8,9 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useQuery } from "@tanstack/react-query";
 
+
 export default function AllTask() {
     const { user, loading } = useContext(AuthContext);
-
-    // Fetch tasks using React Query
     const { data: tasks = [], isLoading, error, refetch } = useQuery({
         queryKey: ['tasks', user?.email],
         queryFn: async () => {

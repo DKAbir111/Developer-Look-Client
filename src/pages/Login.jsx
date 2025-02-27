@@ -6,7 +6,7 @@ import { FaGoogle } from "react-icons/fa";
 import useGoogleCalendar from "../hooks/useGoogleCalender";
 
 export default function Login() {
-    const { signIn, logOut, signInWithGoogle, user } = useContext(AuthContext);
+    const { signIn, logOut, signInWithGoogle } = useContext(AuthContext);
     const { handleAuthClick, gapiLoaded, gisLoaded } = useGoogleCalendar();
     const navigate = useNavigate()
 
@@ -36,13 +36,13 @@ export default function Login() {
             });
     };
 
-    console.log(user);
 
     const handleGoogleLogin = () => {
         signInWithGoogle()
             .then((res) => {
                 if (res?.user) {
                     toast.success("User logged in successfully");
+                    navigate('/task')
                     if (gapiLoaded && gisLoaded) {
                         handleAuthClick();
                     } else {
