@@ -23,11 +23,11 @@ const TaskCard = ({ task, refetch }) => {
 
     const handleStatusChange = (e) => {
         const newStatus = e.target.value;
-        axios.put(`http://localhost:5001/api/todos/${task._id}`, { status: newStatus, email: user?.email }, { withCredentials: true })
+        axios.put(`https://todo-server-tau-gilt.vercel.app/api/todos/${task._id}`, { status: newStatus, email: user?.email }, { withCredentials: true })
             .then(res => {
                 if (res.status === 200) {
                     setStatus(newStatus);
-                    console.log({ ...task, status: newStatus })
+                    // console.log({ ...task, status: newStatus })
                     updateEvent({ ...task, status: newStatus });
                     refetch();
                     toast.success('Task status updated successfully');
@@ -42,13 +42,13 @@ const TaskCard = ({ task, refetch }) => {
 
 
     const onDelete = (id) => {
-        axios.delete(`http://localhost:5001/api/todos/${id}`, {
+        axios.delete(`https://todo-server-tau-gilt.vercel.app/api/todos/${id}`, {
             data: { email: user?.email },
             withCredentials: true,
         })
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res);
+                    // console.log(res);
                     toast.success('Task deleted successfully');
                     deleteEvent(id);
                     refetch();

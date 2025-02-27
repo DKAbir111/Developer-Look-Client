@@ -14,7 +14,7 @@ export default function AllTask() {
     const { data: tasks = [], isLoading, error, refetch } = useQuery({
         queryKey: ['tasks', user?.email],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5001/api/todos?email=${user?.email}`, {
+            const res = await axios.get(`https://todo-server-tau-gilt.vercel.app/api/todos?email=${user?.email}`, {
                 withCredentials: true,
             });
             return res.data;
@@ -22,7 +22,7 @@ export default function AllTask() {
         enabled: !!user?.email,
     });
 
-    if (error) return <p className="text-red-500">Error fetching tasks: {error.message}</p>;
+    if (error) return <p className="text-red-500">Error fetching tasks: {error}</p>;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

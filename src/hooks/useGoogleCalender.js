@@ -38,7 +38,7 @@ const useGoogleCalendar = () => {
                     if (response.error) {
                         console.error("Authorization error:", response);
                     } else {
-                        console.log("Authorized successfully!");
+                        // console.log("Authorized successfully!");
                         localStorage.setItem("auth_token", JSON.stringify(response));
                         listUpcomingEvents();
                     }
@@ -115,7 +115,7 @@ const useGoogleCalendar = () => {
                 resource: event,
             });
 
-            console.log("Event created:", response.result);
+            // console.log("Event created:", response.result);
 
             setTaskMapping(prev => ({ ...prev, [task._id]: response.result.id }));
 
@@ -194,7 +194,7 @@ const useGoogleCalendar = () => {
                 eventId: eventId, // Use the actual event ID
             });
 
-            console.log("Event deleted successfully.");
+            // console.log("Event deleted successfully.");
 
             setTaskMapping(prev => {
                 const updatedMapping = { ...prev };

@@ -17,8 +17,8 @@ const AddTask = () => {
         const priority = form.priority.value;
 
         const newTask = { title, description, dueDate, status, priority, email: user?.email }
-        console.log(newTask)
-        axios.post('http://localhost:5001/api/todos', newTask, {
+        // console.log(newTask)
+        axios.post('https://todo-server-tau-gilt.vercel.app/api/todos', newTask, {
             withCredentials: true
         })
             .then(res => {
@@ -31,7 +31,7 @@ const AddTask = () => {
             })
             .catch((error) => {
                 toast.error(error.message)
-                console.log(error);
+                // console.log(error);
             });
     };
 

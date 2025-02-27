@@ -14,11 +14,10 @@ export default function AuthProvider({ children }) {
             setUser(currentUser);
             if (currentUser?.email) {
                 const user = { email: currentUser.email }
-                axios.post('http://localhost:5001/api/jwt', user, {
+                axios.post('https://todo-server-tau-gilt.vercel.app/api/jwt', user, {
                     withCredentials: true,
                 })
                     .then(res => {
-
                         if (res.data) {
                             setLoading(false);
                         }
@@ -26,12 +25,14 @@ export default function AuthProvider({ children }) {
             }
 
             else {
-                axios.post('http://localhost:5001/api/logout', {}, {
+                axios.post('https://todo-server-tau-gilt.vercel.app/api/logout', {}, {
                     withCredentials: true
                 })
                     .then(res => {
-                        console.log('logout', res.data);
-                        setLoading(false);
+                        // console.log('logout', res.data);
+                        if (res.data) {
+                            setLoading(false);
+                        }
                     })
             }
             setLoading(false)
@@ -39,7 +40,7 @@ export default function AuthProvider({ children }) {
         return () => unsubscribe();
     }, [])
 
-    console.log(user)
+    // console.log(user)
     //create new user
     const createUser = (email, password) => {
         setLoading(true)
