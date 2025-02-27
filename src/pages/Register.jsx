@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
@@ -9,6 +9,7 @@ import axios from "axios";
 export default function Register() {
 
     const { createUser, logOut } = useContext(AuthContext)
+    const navigate = useNavigate()
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -26,6 +27,7 @@ export default function Register() {
                         })
                     logOut()
                     form.reset();
+                    navigate('/')
                 }
             })
             .catch((error) => {

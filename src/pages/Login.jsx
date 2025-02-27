@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { FaGoogle } from "react-icons/fa";
@@ -8,6 +8,7 @@ import useGoogleCalendar from "../hooks/useGoogleCalender";
 export default function Login() {
     const { signIn, logOut, signInWithGoogle, user } = useContext(AuthContext);
     const { handleAuthClick, gapiLoaded, gisLoaded } = useGoogleCalendar();
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,6 +22,7 @@ export default function Login() {
                 if (user?.email) {
                     if (user.emailVerified) {
                         toast.success("User logged in successfully!");
+                        navigate('/task')
                         form.reset();
                     } else {
                         toast.error("Please verify your email before logging in!");

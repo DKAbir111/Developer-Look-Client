@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { RiMenuFold2Line } from "react-icons/ri";
 import useGoogleCalendar from "../hooks/useGoogleCalender";
 import { useContext } from "react";
@@ -6,6 +6,7 @@ import AuthContext from "../context/AuthContext";
 export default function Sidebar() {
     const { handleAuthClick, gapiLoaded, gisLoaded } = useGoogleCalendar();
     const { logOut } = useContext(AuthContext)
+    const navigate = useNavigate()
     return (
         <div className="drawer lg:drawer-open relative min-h-screen">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -31,6 +32,7 @@ export default function Sidebar() {
                             <li><a onClick={() => {
                                 localStorage.removeItem('auth_token');
                                 logOut();
+                                navigate('/')
                             }}>Log Out</a></li>
                         </ul>
                     </div>
