@@ -9,14 +9,14 @@ import { FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../assets/logo.png";
 import welcome2 from "../assets/welcome2.png";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Import AOS CSS
+import "aos/dist/aos.css"; 
 import useGoogleCalendar from "../hooks/useGoogleCalender";
 
 export default function Register() {
     const { createUser, logOut, signInWithGoogle } = useContext(AuthContext);
     const navigate = useNavigate();
     const { handleAuthClick, gapiLoaded, gisLoaded } = useGoogleCalendar();
-    // State for showing/hiding password
+
     const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
@@ -75,8 +75,8 @@ export default function Register() {
                 {/* left side with register form */}
                 <div
                     className="w-full md:w-1/2 bg-white rounded-lg p-6 space-y-6"
-                    data-aos="fade-up" // Apply AOS animation
-                    data-aos-delay="200" // Optional delay
+                    data-aos="fade-up" 
+                    data-aos-delay="200" 
                 >
                     <div className="text-center mb-6">
                         <img src={logo} alt="App Logo" className="w-24 mx-auto mb-4" />
@@ -140,8 +140,8 @@ export default function Register() {
                 {/* right side with welcome image */}
                 <div
                     className="w-full md:w-1/2 order-first md:order-last md:flex justify-center hidden"
-                    data-aos="fade-left" // Apply AOS animation
-                    data-aos-delay="400" // Optional delay
+                    data-aos="fade-left" 
+                    data-aos-delay="400" 
                 >
                     <img
                         src={welcome2}
